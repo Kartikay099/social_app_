@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* index.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Light mode styles */
+body:not(.dark) {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --bg-tertiary: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border-primary: #d1d5db;
+  --border-secondary: #e5e7eb;
+}
+
+/* Dark mode styles */
+body.dark {
+  --bg-primary: #000000;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --border-primary: #374151;
+  --border-secondary: #4b5563;
+}
+
+/* 🔷 Hexagon Clip Class */
+.clip-hexagon {
+  clip-path: polygon(
+    25% 0%, 75% 0%,
+    100% 50%, 75% 100%,
+    25% 100%, 0% 50%
+  );
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
