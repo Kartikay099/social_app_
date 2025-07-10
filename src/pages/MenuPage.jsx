@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
-const MenuPage = ({ onBack, onShowSettings, onShowExplore }) => {
+const MenuPage = ({ onBack, onShowSettings, onShowExplore, onShowDairies, onShowAdminBoard }) => {
   const { isDarkMode } = useTheme();
 
   const themeClasses = {
@@ -19,9 +19,9 @@ const MenuPage = ({ onBack, onShowSettings, onShowExplore }) => {
   };
 
   const menuItems = [
-    { icon: BookOpen, label: "Dairies", onClick: null },
+    { icon: BookOpen, label: "Dairies", onClick: onShowDairies },
     { icon: Compass, label: "Explore list", onClick: onShowExplore },
-    { icon: Shield, label: "AdminBoard", onClick: null },
+    { icon: Shield, label: "AdminBoard", onClick: onShowAdminBoard },
     { icon: Settings, label: "Settings", onClick: onShowSettings },
   ];
 

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Bell, Shield, Moon, Sun, Wifi, Volume2, VolumeX, User, Lock, HelpCircle, LogOut } from 'lucide-react';
+import {
+  ArrowLeft, Bell, Shield, Moon, Sun, Wifi,
+  Volume2, VolumeX, User, Lock, HelpCircle, LogOut
+} from 'lucide-react';
 import { useTheme } from '../context/ThemeContext.jsx';
 
 const Settings = ({ onBack }) => {
@@ -8,23 +11,47 @@ const Settings = ({ onBack }) => {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [autoPlay, setAutoPlay] = useState(false);
 
+  const user = {
+    name: 'Jane Doe',
+    avatar: '/profilepic.png',
+    tagline: 'Loving the social vibes!',
+  };
+
+  const CustomToggle = ({ enabled, onChange }) => (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onChange();
+      }}
+      className={`w-10 h-5 flex items-center rounded-full p-1 transition-colors ${
+        enabled ? 'bg-pink-500' : 'bg-gray-400'
+      }`}
+    >
+      <span
+        className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
+          enabled ? 'translate-x-5' : ''
+        }`}
+      />
+    </button>
+  );
+
   const settingsSections = [
     {
       title: 'Account',
       items: [
         { icon: User, label: 'Edit Profile', action: 'edit-profile' },
-        { icon: Lock, label: 'Privacy & Security', action: 'privacy' },
-        { icon: Shield, label: 'Two-Factor Authentication', action: '2fa' },
-      ]
+        { icon: Lock, label: 'Privacy', action: 'privacy' },
+        { icon: Shield, label: 'Two-Factor Auth', action: '2fa' },
+      ],
     },
     {
       title: 'Preferences',
       items: [
-        { icon: Bell, label: 'Notifications', action: 'notifications', toggle: notifications, onToggle: setNotifications },
-        { icon: isDarkMode ? Moon : Sun, label: 'Dark Mode', action: 'dark-mode', toggle: isDarkMode, onToggle: (value) => setTheme(value) },
-        { icon: soundEnabled ? Volume2 : VolumeX, label: 'Sound', action: 'sound', toggle: soundEnabled, onToggle: setSoundEnabled },
-        { icon: Wifi, label: 'Auto-play Videos', action: 'autoplay', toggle: autoPlay, onToggle: setAutoPlay },
-      ]
+        { icon: Bell, label: 'Notifications', toggle: notifications, onToggle: () => setNotifications(!notifications) },
+        { icon: isDarkMode ? Moon : Sun, label: 'Dark Mode', toggle: isDarkMode, onToggle: () => setTheme(!isDarkMode) },
+        { icon: soundEnabled ? Volume2 : VolumeX, label: 'Sound', toggle: soundEnabled, onToggle: () => setSoundEnabled(!soundEnabled) },
+        { icon: Wifi, label: 'Auto-play Videos', toggle: autoPlay, onToggle: () => setAutoPlay(!autoPlay) },
+      ],
     },
     {
       title: 'Support',
@@ -32,122 +59,80 @@ const Settings = ({ onBack }) => {
         { icon: HelpCircle, label: 'Help & Support', action: 'help' },
         { icon: User, label: 'About VOAT', action: 'about' },
         { icon: LogOut, label: 'Log Out', action: 'logout', danger: true },
-      ]
-    }
+      ],
+    },
   ];
 
   const handleAction = (action) => {
     switch (action) {
       case 'edit-profile':
-        console.log('Edit Profile clicked');
-        break;
       case 'privacy':
-        console.log('Privacy & Security clicked');
-        break;
       case '2fa':
-        console.log('Two-Factor Authentication clicked');
-        break;
       case 'help':
-        console.log('Help & Support clicked');
-        break;
       case 'about':
-        console.log('About VOAT clicked');
+        alert(`${action} clicked`);
         break;
       case 'logout':
-        if (confirm('Are you sure you want to log out?')) {
-          console.log('Logging out...');
-        }
+        if (confirm('Are you sure you want to log out?')) alert('Logging out...');
         break;
-      default:
-        console.log('Action:', action);
     }
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <div className={`min-h-screen pb-8 px-4 ${isDarkMode ? 'bg-[#121212] text-white' : 'bg-[#f9f9f9] text-black'}`}>
       {/* Header */}
-      <div className={`flex items-center p-4 border-b ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
-        <ArrowLeft 
-          className={`cursor-pointer hover:text-gray-300 transition-colors mr-4 ${isDarkMode ? 'text-white' : 'text-black'}`}
-          onClick={onBack} 
-        />
-        <h1 className="text-xl font-bold">Settings</h1>
+      <div className="flex flex-col items-center text-center py-8 bg-[#1e1e1e] text-white rounded-b-2xl relative">
+        <img src={user.avatar} alt="Avatar" className="w-20 h-20 rounded-full object-cover border-2 border-gray-300 mb-3" />
+        <h2 className="font-semibold text-lg">{user.name}</h2>
+        <p className="text-xs text-gray-300">{user.tagline}</p>
+        <button onClick={onBack} className="absolute top-4 left-4 p-2">
+          <ArrowLeft className="text-white" />
+        </button>
       </div>
 
-      {/* Settings Content */}
-      <div className="p-4 space-y-6">
-        {settingsSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className="space-y-3">
-            <h2 className={`text-lg font-semibold px-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{section.title}</h2>
-            <div className={`rounded-xl overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
-              {section.items.map((item, itemIndex) => (
+      {/* Sections */}
+      <div className="space-y-10 mt-10">
+        {settingsSections.map((section, i) => (
+          <div key={i}>
+            <h3 className="font-medium text-xs text-gray-500 uppercase tracking-wide mb-2">
+              {section.title}
+            </h3>
+            <div className="space-y-3">
+              {section.items.map((item, j) => (
                 <div
-                  key={itemIndex}
-                  className={`flex items-center justify-between p-4 border-b last:border-b-0 hover:transition-colors cursor-pointer ${
-                    isDarkMode 
-                      ? 'border-gray-700 hover:bg-gray-700' 
-                      : 'border-gray-200 hover:bg-gray-200'
-                  } ${
-                    item.danger ? (isDarkMode ? 'hover:bg-red-900/20' : 'hover:bg-red-50') : ''
-                  }`}
-                  onClick={() => handleAction(item.action)}
+                  key={j}
+                  className={`flex items-center justify-between px-4 py-3 rounded-md ${
+                    isDarkMode ? 'bg-[#1e1e1e]' : 'bg-white'
+                  } border ${item.danger ? 'border-red-400 text-red-500' : 'border-gray-200'} cursor-pointer`}
+                  onClick={() => item.action && handleAction(item.action)}
                 >
                   <div className="flex items-center space-x-3">
-                    <item.icon 
-                      size={20} 
-                      className={item.danger 
-                        ? 'text-red-400' 
-                        : isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                      } 
-                    />
-                    <span className={item.danger 
-                      ? 'text-red-400' 
-                      : isDarkMode ? 'text-white' : 'text-black'
-                    }>
-                      {item.label}
-                    </span>
+                    <item.icon size={18} className={item.danger ? 'text-red-500' : 'text-gray-600'} />
+                    <span className="text-sm font-normal">{item.label}</span>
                   </div>
-                  
                   {item.toggle !== undefined ? (
-                    <div className="flex items-center">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          item.onToggle(!item.toggle);
-                        }}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                          item.toggle 
-                            ? 'bg-blue-600' 
-                            : isDarkMode ? 'bg-gray-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                            item.toggle ? 'translate-x-6' : 'translate-x-1'
-                          }`}
-                        />
-                      </button>
-                    </div>
+                    <CustomToggle enabled={item.toggle} onChange={item.onToggle} />
                   ) : (
-                    <div className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
+                    <span className="text-gray-400 text-sm">›</span>
                   )}
                 </div>
               ))}
             </div>
           </div>
         ))}
+      </div>
 
-        {/* App Version */}
-        <div className="text-center pt-8">
-          <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>VOAT Network v1.0.0</p>
+      {/* Footer */}
+      <div className="text-center text-xs text-gray-500 mt-12">
+        <div className="flex justify-center items-center gap-2 mb-1">
+          <img src="/vite.svg" alt="Logo" className="w-5 h-5" />
+          <span className="font-medium text-pink-500">VOAT Network</span>
         </div>
+        <p>v1.0.0 © 2024</p>
+        <p>Built for the community</p>
       </div>
     </div>
   );
 };
 
-export default Settings; 
+export default Settings;

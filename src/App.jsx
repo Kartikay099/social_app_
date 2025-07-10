@@ -12,6 +12,8 @@ import IndividualChat from './pages/IndividualChat.jsx';
 import Settings from './pages/Settings.jsx';
 import MenuPage from './pages/MenuPage.jsx';
 import HustleSwitcher from './pages/HustleSwitcher.jsx';
+import Dairies from './pages/Dairies.jsx';
+import AdminBoard from './pages/AdminBoard.jsx';
 import { useTheme } from './context/ThemeContext.jsx';
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
+  const [showDairies, setShowDairies] = useState(false);
+  const [showAdminBoard, setShowAdminBoard] = useState(false);
 
   const hideAllScreens = () => {
     setShowNotifications(false);
@@ -37,6 +41,8 @@ function App() {
     setShowSettings(false);
     setShowMenu(false);
     setCurrentChat(null);
+    setShowDairies(false);
+    setShowAdminBoard(false);
   };
 
   const handleShowNotifications = () => {
@@ -80,6 +86,16 @@ function App() {
     setActiveTab('explore');
   };
 
+  const handleShowDairies = () => {
+    hideAllScreens();
+    setShowDairies(true);
+  };
+
+  const handleShowAdminBoard = () => {
+    hideAllScreens();
+    setShowAdminBoard(true);
+  };
+
   const renderPage = () => {
     if (showMenu)
       return (
@@ -87,9 +103,11 @@ function App() {
           onBack={hideAllScreens}
           onShowSettings={handleShowSettings}
           onShowExplore={handleShowExploreFromMenu}
+          onShowDairies={handleShowDairies}
+          onShowAdminBoard={handleShowAdminBoard}
         />
       );
-
+    if (showAdminBoard) return <AdminBoard onBack={hideAllScreens} />;
     if (showNotifications) return <Notifications onBack={hideAllScreens} />;
     if (showChats)
       return (
@@ -121,6 +139,7 @@ function App() {
         <IndividualChat chat={currentChat} onBack={() => setShowChats(true)} />
       );
     if (showSettings) return <Settings onBack={hideAllScreens} />;
+    if (showDairies) return <Dairies onBack={hideAllScreens} />;
 
     // Tab-based pages
     switch (activeTab) {
@@ -167,7 +186,9 @@ function App() {
         !showCommunities &&
         !showIndividualChat &&
         !showSettings &&
-        !showMenu && (
+        !showMenu &&
+        !showDairies &&
+        !showAdminBoard && (
           <BottomNav
             activeTab={activeTab}
             setActiveTab={setActiveTab}
